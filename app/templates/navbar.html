@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Navbar</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="bg-green-600 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a class="text-white text-2xl font-bold" href="{% url 'login' %}">Movie App </a>
+            <button class="block lg:hidden text-white focus:outline-none" id="navbar-toggler">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div class="hidden lg:flex lg:items-center w-full lg:w-auto" id="navbar-content">
+                <ul class="lg:flex lg:space-x-6 mt-4 lg:mt-0">
+                    <li><a class="text-white text-lg hover:text-gray-200" href="{% url 'login' %}">Home</a></li>
+                    <li><a class="text-white text-lg hover:text-gray-200" href="{% url 'admin:index' %}">Admin</a></li>
+                    <li><a class="text-white text-lg hover:text-gray-200" href="{% url 'insert' %}">Insert Data</a></li>
+                    <li><a class="text-white text-lg hover:text-gray-200" href="{% url 'view' %}">Display All</a></li>
+                    <li><a class="text-white text-lg hover:text-gray-200" href="{% url 'login_page' %}">Log Out</a></li>
+
+                    <li class="relative">
+                        <!-- <a class="text-white text-lg hover:text-gray-200 cursor-pointer" id="navbarDropdown" role="button">Dropdown</a> -->
+                        <ul class="absolute left-0 mt-2 bg-green-600 rounded-lg shadow-lg hidden group-hover:block" aria-labelledby="navbarDropdown">
+                            <li><a class="block px-4 py-2 text-white hover:bg-green-500" href="{% url 'details' 1 %}">User Comments</a></li>
+                            <li><a class="block px-4 py-2 text-white hover:bg-green-500" href="{% url 'comment_view' 1 %}">View Comment</a></li>
+                            <li><hr class="border-t border-gray-200 my-2"></li>
+                            <li><a class="block px-4 py-2 text-white hover:bg-green-500" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <!-- <li><a class="text-gray-400 text-lg cursor-not-allowed" href="#" aria-disabled="true">Disabled</a></li> -->
+                </ul>
+                <!-- <form class="flex mt-4 lg:mt-0">
+                    <input class="form-input px-4 py-2 rounded-l-lg text-gray-700" type="search" placeholder="Search" aria-label="Search">
+                    <button class="bg-white text-green-600 px-4 py-2 rounded-r-lg hover:bg-gray-100" type="submit">Search</button>
+                </form> -->
+            </div>
+        </div>
+    </nav>
+    <!-- <script>
+        document.getElementById('navbar-toggler').onclick = function () {
+            var content = document.getElementById('navbar-content');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+            } else {
+                content.classList.add('hidden');
+            }
+        };
+    </script> -->
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIES</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+            padding: 20px;
+            margin: 0;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        .movie-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        .movie {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 15px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .movie:hover {
+            transform: translateY(-5px);
+        }
+        .movie img {
+            width: 100%;
+            height: auto;
+        }
+        .movie-details {
+            padding: 15px;
+        }
+        .movie-details ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .movie-details li {
+            margin-bottom: 10px;
+        }
+        .movie-details button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .movie-details button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>MOVIES</h1>
+    <div class="movie-container">
+        {% for i in data %}
+        <div class="movie">
+            <img src="{{i.poster.url}}" alt="">
+            <div class="movie-details">
+                <ul>
+                    <li><strong>Title:</strong> {{i.title}}</li>
+                    <li><strong>Story:</strong> {{i.story}}</li>
+                    <li><strong>Review:</strong> {{i.review}}</li>
+                    <li><strong>Blog Date:</strong> {{i.blog_date}}</li>
+                    <li><strong>Release Date:</strong> {{i.release_date}}</li>
+                </ul>
+                <a href="{%url 'details' i.id %}"><button>READ MORE</button></a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
