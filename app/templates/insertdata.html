@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert Movie Data</title>
     <style>
+        /* CSS Reset for consistency across browsers */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             display: flex;
             justify-content: center;
@@ -52,14 +58,16 @@
             background-color: #45a049;
         }
     </style>
+    <!-- Load the CSS for crispy forms -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container">
         <h1>INSERT MOVIE DATA</h1>
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Submit">
+            {% load crispy_forms_tags %}
+            {{ form|crispy }}
         </form>
     </div>
 </body>

@@ -30,6 +30,7 @@ urlpatterns = [
     path('update/<int:id>/',views.updatedata,name='update'),
     path('details/<int:id>/',views.user_comments,name='details'),
     path('commentview/<int:id>/',views.comment_view,name='comment_view'),
+    # path('', views.render_login_page, name='login_page'), 
     # path('login/', obtain_auth_token,name='login'),
     # path('api-token-auth/', CustomObtainAuthToken.as_view(), name='api_token_auth'),
     # path('api-token-logout/', logout_view, name='api_token_logout'),

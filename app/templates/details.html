@@ -59,9 +59,16 @@
     <div class="container">
         <img src="{{data.poster.url}}" alt="">
         <form action="" method="post" enctype="multipart/form-data">
+            <br>
             {% csrf_token %}
-            {{form.as_p}}
+            {% load crispy_forms_tags %}
+            <br>
+            {{ form|crispy }}
+            <!-- {% csrf_token %}
+            {{form.as_p}} -->
+            <br>
             <input type="submit" value="Submit">
+                <br>
         </form>
     </div>
 </body>

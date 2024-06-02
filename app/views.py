@@ -2,7 +2,6 @@ from django.shortcuts import render
 from .models import insert_movie,comments
 from django.http import HttpResponse
 from .forms import insert_form,comment_movie
-# Import necessary modules and models
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -18,45 +17,68 @@ from rest_framework import status
 from django.contrib.auth import logout
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth.forms import AuthenticationForm
 
-
+# class CustomAuthToken(ObtainAuthToken):
+#     def post(self, request):
+#         serializer = self.serializer_class(data=request.data, context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data['user']
+        
+#         try:
+#             token, created = Token.objects.get_or_create(user=user)
+#             return Response({
+#                 'token': token.key,
+#                 'user_id': user.pk,
+#                 'username': user.username,
+#                 'last_name': user.last_name,
+#                 'first_name': user.first_name,
+#                 # 'email': user.email
+#             })
+#         except Exception as e:
+#             return Response({
+#                 'error': str(e)
+#             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    try:
+        request.user.auth_token.delete()
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
+    except AttributeError:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
 def login_page(request):
-    # Check if the HTTP request method is POST (form submission)
+    # If the request method is POST, it means the form was submitted
     if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request)
 
-        # Check if a user with the provided username exists
-        if not User.objects.filter(username=username).exists():
-            # Display an error message if the username does not exist
-            messages.error(request, 'Invalid Username')
-            return Response({'error': 'Invalid Username'}, status=400)
-
-        # Authenticate the user with the provided username and password
-        user = authenticate(username=username, password=password)
-
-        if user is None:
-            # Display an error message if authentication fails (invalid password)
-            messages.error(request, "Invalid Password")
-            return Response({'error': 'Invalid Password'}, status=400)
+                token, created = Token.objects.get_or_create(user=user)
+                # Redirect to a success page or dashboard after login
+                return redirect('login')  # replace 'dashboard' with your URL name
+            else:
+                # Invalid password
+                messages.error(request, "Invalid username or password.")
         else:
-            # Log in the user
-            login(request)
-            # Create or retrieve the token for the authenticated user
-            token, created = Token.objects.get_or_create(user=user)
-            # Return token information as part of the response
-            return Response({
-                'token': token.key,
-                'user_id': user.pk,
-                'username': user.username,
-                'last_name': user.last_name,
-                'first_name': user.first_name,
-            }, status=200)
-
-    # Render the login page template (GET request)
-    return render(request, 'login.html')
+            # Form is invalid
+            messages.error(request, "Invalid username or password.")
+    else:
+        # If GET request, initialize an empty form
+        form = AuthenticationForm()
+    
+    return render(request, 'login.html', {'form': form})
 
 # Define a view function for the registration page
 def register_page(request):
@@ -94,17 +116,6 @@ def register_page(request):
 	return render(request, 'register.html')
 
 # Create your views here.
-@api_view(['POST'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def logout_view(request):
-    try:
-        request.user.auth_token.delete()
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
-    except AttributeError:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
 # Define a view function for the home page
 
 
@@ -160,16 +171,6 @@ def comment_view(request,id):
     
     return render(request,'usercommentview.html',{'data':data})
 
-# class CustomObtainAuthToken(ObtainAuthToken):
-#     def post(self, request, *args, **kwargs):
-#         username = request.data.get('username')
-#         password = request.data.get('password')
-#         user = authenticate(username=username, password=password)
-#         if user:
-#             token, created = Token.objects.get_or_create(user=user)
-#             return Response({'token': token.key, 'user_id': user.id})
-#         else:
-#             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # @authentication_classes([TokenAuthentication])
@@ -181,8 +182,8 @@ def comment_view(request,id):
 # class CustomAuthToken(ObtainAuthToken):
 #     def post(self, request, *args, **kwargs):
 #         serializer = self.serializer_class(data=request.data, context={'request': request})
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data['user']
+#    serializer.is_valid(raise_exception=True)
+# #         user = serializer.validated_data['user']#      
 #         token, created = Token.objects.get_or_create(user=user)
 #         return Response({
 #             'token': token.key,
